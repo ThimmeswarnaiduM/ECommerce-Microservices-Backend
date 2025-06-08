@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      username: admin
+      password: admin
+      host: localhost
+      port: 27018
+      database: customer # The database your app will primarily use
+      authentication-database-name: admin # The database where the 'root' user is defined
+      uri: mongodb://admin:admin@localhost:27018/customer?authSource=admin&authMechanism=SCRAM-SHA-1

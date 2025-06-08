@@ -1,0 +1,142 @@
+
+
+services:
+  config_server:
+    image: thimmeswarnaidu/config-server:s10
+    container_name: config_server
+    ports:
+      - "8888:8888"
+    restart: unless-stopped
+    networks:
+      - microservice_network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  eureka_server:
+    image: thimmeswarnaidu/eureka-server:E1
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8761
+      - EUREKA_INSTANCE_HOSTNAME=eureka-server
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      config_server:
+        condition: service_healthy
+    networks:
+      - microservice_network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  postgres:
+    container_name: ms_pg_sql
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - microservice_network
+
+  pgadmin:
+    container_name: pg_admin
+    image: dpage/pgadmin4
+    ports:
+      - "8081:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_DEFAULT_EMAIL:-pgadmin@pg.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - microservice_network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  mongo:
+    container_name: mongo_db
+    image: mongo
+    ports:
+      - "27018:27017"
+    command: --bind_ip_all
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongo:/data/db
+    restart: unless-stopped
+    networks:
+      - microservice_network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh mongodb://admin:admin@localhost:27017/admin --quiet || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  customer:
+    image: thimmeswarnaidu/customer-service:s13
+    container_name: customer-service
+    ports:
+      - "8090:8090"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_APPLICATION_NAME=customer-service
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+      - EUREKA_INSTANCE_HOSTNAME=customer-service
+      - SPRING_DATA_MONGODB_URI=mongodb://admin:admin@mongo_db:27017/customer?authSource=admin&authMechanism=SCRAM-SHA-1
+      - SPRING_CLOUD_CONFIG_URI=http://config_server:8888
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=true
+      - EUREKA_CLIENT_FETCH_REGISTRY=true
+    depends_on:
+      - mongo
+      - eureka_server
+      - config_server
+
+
+
+    networks:
+      - microservice_network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 30s  # Increased start period
+  mail-dev:
+    container_name: ms_mail_dev
+    image: maildev/maildev
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - microservice_network
+
+networks:
+  microservice_network:
+    driver: bridge
+
+volumes:
+  postgres:
+  mongo:
+  pgadmin_data:
