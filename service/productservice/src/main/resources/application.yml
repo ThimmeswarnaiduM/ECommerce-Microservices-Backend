@@ -1,17 +1,14 @@
 spring:
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://config-server:8888
   application:
-        name: productservice
+    name: product
+  profiles:
+    active: docker
+
 server:
   port: 8091
-info:
-   app.name: product-service
-   build.version: ${git.commit.id.abbrev}
-   contact.email: e-commerce@gmail.com
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/

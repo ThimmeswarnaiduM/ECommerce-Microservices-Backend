@@ -1,0 +1,4 @@
+package e_Commerce_project.customer.dto;
+
+public class SuccessDto {
+}

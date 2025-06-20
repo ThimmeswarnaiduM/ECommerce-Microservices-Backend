@@ -1,5 +1,6 @@
 package e_Commerce_project.productservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 
@@ -26,5 +27,8 @@ public class Product {
     private BigDecimal price;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id",nullable=false)
+    @JsonBackReference
     private  Category category;
+
+
 }
