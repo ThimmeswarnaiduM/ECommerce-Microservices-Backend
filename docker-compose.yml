@@ -125,7 +125,7 @@ services:
       retries: 5
       start_period: 30s
   productservice:
-    image: thimmeswarnaidu/product-service:s25
+    image: thimmeswarnaidu/product-service:s28
     container_name: product-service
     ports:
       - "8091:8091"
