@@ -28,9 +28,10 @@ public class ProductDto {
     @Schema(description = "Product description", example = "High-performance laptop", name = "description")
     private String description;
 
-    @NotBlank(message = "Availability quantity is required")
+    @NotNull(message = "Availability quantity is required")
     @Schema(description = "Available stock quantity", example = "50", name = "availabilityQuantity")
-    private String availabilityQuantity;
+    @jakarta.validation.constraints.Positive(message = "Availability quantity must be positive")
+    private double availabilityQuantity;
 
     @NotNull(message = "Price is required")
     @Schema(description = "Product price", example = "139999.99", name = "price")

@@ -23,7 +23,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private String availabilityQuantity;
+    private double availabilityQuantity;
     private BigDecimal price;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id",nullable=false)

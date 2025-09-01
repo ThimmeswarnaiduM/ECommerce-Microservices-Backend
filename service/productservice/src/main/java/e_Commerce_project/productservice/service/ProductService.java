@@ -1,6 +1,8 @@
 package e_Commerce_project.productservice.service;
 
 import e_Commerce_project.productservice.dto.ProductDto;
+import e_Commerce_project.productservice.dto.ProductPurchaseResponse;
+import e_Commerce_project.productservice.dto.productPurchaseRequest;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -11,4 +13,7 @@ public interface ProductService {
     ProductDto UpdateProductById(Long id, ProductDto dto);
     List<ProductDto> GetAllProducts();
     String DeleteProductById(Long id);
+
+
+    List<ProductPurchaseResponse> purchaseProduct(List<productPurchaseRequest> productPurchaseRequests);
 }

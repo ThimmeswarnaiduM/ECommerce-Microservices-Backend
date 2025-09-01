@@ -2,7 +2,9 @@ package e_Commerce_project.productservice.controller;
 
 import e_Commerce_project.productservice.constants.ProductConstants;
 import e_Commerce_project.productservice.dto.ProductDto;
+import e_Commerce_project.productservice.dto.ProductPurchaseResponse;
 import e_Commerce_project.productservice.dto.SuccessDto;
+import e_Commerce_project.productservice.dto.productPurchaseRequest;
 import e_Commerce_project.productservice.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -127,6 +129,13 @@ public class ProductController {
        public ResponseEntity<String>DeleteProductById(@RequestParam("id") Long id ){
       String s = productService.DeleteProductById(id);
       return ResponseEntity.status(HttpStatus.OK).body(s);
+    }
+
+
+    @PostMapping("/purchaseProduct")
+    public ResponseEntity<List<ProductPurchaseResponse>> purchaseProduct(@RequestBody List<productPurchaseRequest> productPurchaseRequests) {
+        List<ProductPurchaseResponse> productPurchaseResponses = productService.purchaseProduct(productPurchaseRequests);
+        return ResponseEntity.ok(productPurchaseResponses);
     }
 
 

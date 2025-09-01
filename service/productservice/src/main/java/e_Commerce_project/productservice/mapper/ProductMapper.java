@@ -1,6 +1,7 @@
 package e_Commerce_project.productservice.mapper;
 
 import e_Commerce_project.productservice.dto.ProductDto;
+import e_Commerce_project.productservice.dto.ProductPurchaseResponse;
 import e_Commerce_project.productservice.entity.Category;
 import e_Commerce_project.productservice.entity.Product;
 import lombok.AllArgsConstructor;
@@ -31,4 +32,14 @@ public class ProductMapper {
                 .category(product.getCategory())
                 .build();
     }
+    public static ProductPurchaseResponse toproductPurchaseResponse(Product product, double quantity) {
+        return new ProductPurchaseResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                quantity
+        );
+    }
 }
+

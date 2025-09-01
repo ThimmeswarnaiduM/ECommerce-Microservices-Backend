@@ -19,7 +19,24 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
         <module name="productservice" />
+      </profile>
+      <profile name="Annotation profile for customer" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
         <module name="customer" />
+      </profile>
+      <profile name="Annotation profile for orderservice" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="orderservice" />
       </profile>
     </annotationProcessing>
   </component>
@@ -28,6 +45,7 @@
       <module name="configServer" options="-parameters" />
       <module name="customer" options="-parameters" />
       <module name="discoverServer" options="-parameters" />
+      <module name="orderservice" options="-parameters" />
       <module name="productservice" options="-parameters" />
     </option>
   </component>
