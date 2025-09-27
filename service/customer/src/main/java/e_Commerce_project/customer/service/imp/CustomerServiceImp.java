@@ -38,11 +38,11 @@ public class CustomerServiceImp implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> getCustomer(String id) {
+    public CustomerDto getCustomer(String id) {
         Optional<Customer> byId = customerRepo.findById(id);
         Customer customer = byId.get();
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer);
-        return List.of(customerDto);
+        return customerDto;
     }
 
     @Override

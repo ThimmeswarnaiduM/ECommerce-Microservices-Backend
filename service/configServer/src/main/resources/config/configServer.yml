@@ -9,8 +9,16 @@ spring:
       server:
         git:
           uri: https://github.com/ThimmeswarnaiduM/-E-Commerce-Project
-          label: master
+          label: main             # or 'master' if your repo uses that
           timeout: 5000
           clone-on-start: true
           force-pull: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

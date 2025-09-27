@@ -55,6 +55,42 @@ services:
     restart: unless-stopped
     networks:
       - microservice_network
+  mysql:
+    container_name: ms_mysql
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: order_service
+      # ✅ remove MYSQL_USER=root and MYSQL_PASSWORD
+      # If you want a non-root app user, add like:
+      # MYSQL_USER: appuser
+      # MYSQL_PASSWORD: apppass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - microservice_network
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8083:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: mysql
+    depends_on:
+      - mysql
+    restart: unless-stopped
+    networks:
+      - microservice_network
+
+
+
+
 
   pgadmin:
     container_name: pg_admin
@@ -94,8 +130,37 @@ services:
       retries: 5
       start_period: 20s
 
+  order-service:
+    container_name: order-service
+    image: thimmeswarnaidu/order-service:s19
+    ports:
+      - "8070:8070"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://ms_mysql:3306/order_service
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=mysql
+      - APPLICATION_CUSTOMER_URL=http://customer-service:8090/api/v1/customers
+      - APPLICATION_PRODUCT_URL=http://product-service:8091/api/v1/products
+      - APPLICATION_PAYMENT_URL=http://localhost:8081/api/v1/payments
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=false
+      - EUREKA_INSTANCE_HOSTNAME=order-service
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=true
+      - EUREKA_CLIENT_FETCH_REGISTRY=true
+    depends_on:
+
+      - eureka_server
+      - config_server
+
+
+
+    networks:
+      - microservice_network
+    restart: unless-stopped
+
   customer:
-    image: thimmeswarnaidu/customer-service:s13
+    image: thimmeswarnaidu/customer-service:s15
     container_name: customer-service
     ports:
       - "8090:8090"
@@ -189,3 +254,4 @@ volumes:
   postgres:
   mongo:
   pgadmin_data:
+  mysql_data:

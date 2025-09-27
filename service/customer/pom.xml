@@ -145,7 +145,7 @@
 				<version>3.3.2</version>
 				<configuration>
 					<to>
-						<image>thimmeswarnaidu/customer-service:s13</image>
+						<image>thimmeswarnaidu/customer-service:s15</image>
 					</to>
 				</configuration>
 			</plugin>

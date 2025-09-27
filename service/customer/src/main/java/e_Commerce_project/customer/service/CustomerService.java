@@ -9,7 +9,7 @@ import java.util.List;
 public interface CustomerService {
     void createCustomer(CustomerDto customerDto) throws IllegalAccessException;
 
-    List<CustomerDto> getCustomer(String id);
+    CustomerDto getCustomer(String id);
 
     List<CustomerDto> updateCustomer(String id, CustomerUpdateDto customerDto);
 

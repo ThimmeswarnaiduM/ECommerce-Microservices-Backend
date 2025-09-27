@@ -87,9 +87,9 @@ private CustomerService customerService;
                     )
             }
     )
-    @GetMapping("customer/{id}")
-    public ResponseEntity<List<CustomerDto>> getCustomer(@PathVariable("id") String id){
-        List<CustomerDto> customer = customerService.getCustomer(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDto> getCustomer(@PathVariable("id") String id){
+        CustomerDto customer = customerService.getCustomer(id);
         return ResponseEntity.status(HttpStatus.OK).body(customer);
 
 
