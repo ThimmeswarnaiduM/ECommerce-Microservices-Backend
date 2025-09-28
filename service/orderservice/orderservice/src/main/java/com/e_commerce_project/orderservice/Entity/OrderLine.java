@@ -3,20 +3,24 @@ package com.e_commerce_project.orderservice.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
 @ToString
-@Entity
+@Table(name = "order_lines")
 public class OrderLine {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-    private long productId;
-    private double quantity;
+
+    private Long productId;
+    private Double quantity;
 }

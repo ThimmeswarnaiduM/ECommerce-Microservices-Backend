@@ -132,7 +132,7 @@ services:
 
   order-service:
     container_name: order-service
-    image: thimmeswarnaidu/order-service:s19
+    image: thimmeswarnaidu/order-service:s22
     ports:
       - "8070:8070"
     environment:

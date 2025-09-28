@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class OrderMapper {
     public Order toOrder(OrderRequest orderRequest){
         return Order.builder()
-                .id(orderRequest.id())
+                //.id(orderRequest.id())
                 .customerId(orderRequest.customerId())
                 .referenceNumber(orderRequest.referenceNumber())
                 .totalAmount(orderRequest.totalAmount())
