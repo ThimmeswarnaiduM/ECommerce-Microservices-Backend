@@ -1,0 +1,12 @@
+server:
+    port: 8761
+
+eureka:
+  instance:
+    hostname: ms_discover_server  # Must match container name
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://ms_discover_server:8761/eureka/
+
