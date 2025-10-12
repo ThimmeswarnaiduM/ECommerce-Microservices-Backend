@@ -4,10 +4,9 @@ import com.e_commerce_project.orderservice.Records.OrderRequest;
 import com.e_commerce_project.orderservice.Service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -20,7 +19,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.createOrder(orderRequest));
 
     }
-
-
+    @GetMapping
+    public ResponseEntity<List<OrderRequest>> getAllOrders() {
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderRequest> getOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.getOrderById(id));
+    }
 
 }

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 @Service
 @Data
 @AllArgsConstructor
@@ -20,5 +22,18 @@ public class OrderMapper {
                 .build();
 
 
+    }
+
+    public OrderRequest FromOrder(Order order) {
+        if (order == null) {
+            return null;
+        }
+
+        return OrderRequest.builder()
+                .customerId(order.getCustomerId())
+                .referenceNumber(order.getReferenceNumber())
+                .totalAmount(order.getTotalAmount())
+                .paymentStatus(order.getPaymentStatus())
+                .build();
     }
 }
