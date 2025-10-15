@@ -4,10 +4,7 @@ import com.e_commerce_project.orderservice.Entity.Order;
 import com.e_commerce_project.orderservice.Kafka.OrderProducer;
 import com.e_commerce_project.orderservice.Mapping.OrderMapper;
 import com.e_commerce_project.orderservice.OpenFeign.customerResponse;
-import com.e_commerce_project.orderservice.Records.OrderConfirmation;
-import com.e_commerce_project.orderservice.Records.OrderLineRequest;
-import com.e_commerce_project.orderservice.Records.OrderRequest;
-import com.e_commerce_project.orderservice.Records.PurchaseRequest;
+import com.e_commerce_project.orderservice.Records.*;
 import com.e_commerce_project.orderservice.Repository.OrderRepository;
 import com.e_commerce_project.orderservice.RestTemplateConfigs.ProductClient;
 import com.e_commerce_project.orderservice.Service.OrderService;
@@ -15,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,14 +59,14 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
-    public List<OrderRequest> getAllOrders() {
+    public List<OrderResponse> getAllOrders() {
         List<Order> all = orderRepository.findAll();
-        List<OrderRequest> collect = all.stream().map(orderMapper::FromOrder).collect(Collectors.toList());
+        List<OrderResponse> collect = all.stream().map(orderMapper::FromOrder).collect(Collectors.toList());
         return collect;
     }
 
     @Override
-    public OrderRequest getOrderById(Long id) {
+    public OrderResponse getOrderById(Long id) {
         return orderRepository.findById(id)
                 .map(orderMapper::FromOrder)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));

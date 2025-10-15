@@ -1,6 +1,7 @@
 package com.e_commerce_project.orderservice.Controller;
 
 import com.e_commerce_project.orderservice.Records.OrderRequest;
+import com.e_commerce_project.orderservice.Records.OrderResponse;
 import com.e_commerce_project.orderservice.Service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,11 @@ public class OrderController {
 
     }
     @GetMapping
-    public ResponseEntity<List<OrderRequest>> getAllOrders() {
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
     @GetMapping("/{id}")
-    public ResponseEntity<OrderRequest> getOrderById(@PathVariable Long id) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 

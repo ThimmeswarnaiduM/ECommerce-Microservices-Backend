@@ -2,6 +2,7 @@ package com.e_commerce_project.orderservice.Mapping;
 
 import com.e_commerce_project.orderservice.Entity.Order;
 import com.e_commerce_project.orderservice.Records.OrderRequest;
+import com.e_commerce_project.orderservice.Records.OrderResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class OrderMapper {
 
     }
 
-    public OrderRequest FromOrder(Order order) {
+    public OrderResponse FromOrder(Order order) {
         if (order == null) {
             return null;
         }
 
-        return OrderRequest.builder()
+        return OrderResponse.builder()
                 .customerId(order.getCustomerId())
                 .referenceNumber(order.getReferenceNumber())
                 .totalAmount(order.getTotalAmount())
