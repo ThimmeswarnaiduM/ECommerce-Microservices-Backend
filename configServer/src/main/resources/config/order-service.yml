@@ -1,17 +1,80 @@
 spring:
-datasource:
-  username:root
-  password:mysql
-  url:jdbc:mysql://localhost:3306/order_service
-jpa:
-  hibernate:
-    ddl-auto:update
-  database:
-    datatype:org.hibernate.dialect.MySQL8Dialect
-server:
-  port:8070
-application:
-  customer-url:http://customer-service/api/v1/customers
-  product-url:http://localhost:8080/api/v1/products
-  payment-url:http://localhost:8081/api/v1/payments
+  config:
+    import: optional:configserver:http://config-server:8888
+  profiles:
+    active: docker
 
+  datasource:
+    url: jdbc:mysql://order_mysql:3306/order_service
+    username: root
+    password: mysql
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping:
+          orderConfirmation: com.e_commerce_project.orderservice.Records.OrderConfirmation
+
+
+server:
+  port: 8070
+
+application:
+  customer-url: http://customer-service:8090/api/v1/customers
+  product-url: http://product-service:8091/api/v1/products
+  payment-url: http://payment-service:8060/api/v1/payments
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+    healthcheck:
+      enabled: true
+  instance:
+    hostname: order-service
+    preferIpAddress: false
+    appname: order-service
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    mongo:
+      enabled: false
+    diskspace:
+      enabled: true
+
+info:
+  app.name: order-service
+  build.version: ${git.commit.id.abbrev}
+  contact.email: e-commerce@gmail.com
+
+logging:
+  level:
+    org.springframework.cloud: DEBUG
+    com.netflix.eureka: DEBUG
+    com.netflix.discovery: DEBUG
+    root: INFO
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
