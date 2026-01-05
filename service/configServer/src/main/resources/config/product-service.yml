@@ -1,0 +1,77 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: product-service
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/product?useSSL=false&serverTimezone=UTC
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    baseline-description: Initial migration
+    locations: classpath:db/migration
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    healthcheck:
+      enabled: true
+
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    appname: product-service
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+  health:
+    diskspace:
+      enabled: true
+
+info:
+  app:
+    name: product-service
+    version: ${git.commit.id.abbrev}
+
+logging:
+  level:
+    org.springframework.cloud: DEBUG
+    com.netflix.eureka: DEBUG
+    com.netflix.discovery: DEBUG
+    root: INFO
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html

@@ -1,0 +1,37 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: notification-service
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: false
+    hostname: notification-service
+management:
+  tracing:
+    sampling:
+      probability: 1.0   # local
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  # local
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  service:
+    name: ${spring.application.name}
+

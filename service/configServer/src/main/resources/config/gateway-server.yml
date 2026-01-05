@@ -1,0 +1,27 @@
+spring:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+server:
+  port: 8072
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+info:
+  app:
+    name: API Gateway Server
+    description: Spring Cloud Gateway for Microservices
+    version: 1.0.0

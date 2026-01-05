@@ -8,17 +8,33 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/ThimmeswarnaiduM/-E-Commerce-Project
+          uri: https://github.com/ThimmeswarnaiduM/E-Commerce_Project_Local.git
           label: main             # or 'master' if your repo uses that
           timeout: 5000
+          username: ThimmeswarnaiduM
+          password: thimmeswaranaidu12@
           clone-on-start: true
           force-pull: true
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0   # local
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
   endpoint:
     health:
       show-details: always
+
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  service:
+    name: ${spring.application.name}

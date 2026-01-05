@@ -1,0 +1,107 @@
+<div class="checkout-container">
+    <h1 class="page-title">Checkout</h1>
+
+    <mat-card class="checkout-card">
+        <mat-stepper linear #stepper>
+            <!-- Step 1: Customer Information -->
+            <mat-step [stepControl]="customerFormGroup">
+                <form [formGroup]="customerFormGroup">
+                    <ng-template matStepLabel>Customer Information</ng-template>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Customer ID</mat-label>
+                        <input matInput formControlName="customerId" placeholder="Enter customer ID">
+                        <mat-icon matPrefix>person</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" type="email" placeholder="Enter your email">
+                        <mat-icon matPrefix>email</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Phone Number</mat-label>
+                        <input matInput formControlName="phone" placeholder="Enter phone number">
+                        <mat-icon matPrefix>phone</mat-icon>
+                    </mat-form-field>
+
+                    <div class="step-actions">
+                        <button mat-raised-button color="primary" matStepperNext>
+                            Next
+                            <mat-icon>arrow_forward</mat-icon>
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <!-- Step 2: Order Review -->
+            <mat-step>
+                <ng-template matStepLabel>Review Order</ng-template>
+
+                <div class="order-review">
+                    <h3>Order Items</h3>
+                    @for (item of cartItems; track item.product.id) {
+                    <div class="review-item">
+                        <div class="item-info">
+                            <strong>{{ item.product.name }}</strong>
+                            <span class="quantity">Qty: {{ item.quantity }}</span>
+                        </div>
+                        <span class="item-price">\${{ item.product.price * item.quantity }}</span>
+                    </div>
+                    }
+
+                    <div class="order-total">
+                        <span>Total:</span>
+                        <span class="total-amount">\${{ cartTotal }}</span>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button mat-button matStepperPrevious>
+                        <mat-icon>arrow_back</mat-icon>
+                        Back
+                    </button>
+                    <button mat-raised-button color="primary" matStepperNext>
+                        Next
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                </div>
+            </mat-step>
+
+            <!-- Step 3: Payment Method -->
+            <mat-step [stepControl]="paymentFormGroup">
+                <form [formGroup]="paymentFormGroup">
+                    <ng-template matStepLabel>Payment Method</ng-template>
+
+                    <mat-radio-group formControlName="paymentMethod" class="payment-methods">
+                        @for (method of paymentMethods; track method.value) {
+                        <mat-radio-button [value]="method.value" class="payment-option">
+                            <div class="payment-option-content">
+                                <mat-icon>{{ method.icon }}</mat-icon>
+                                <span>{{ method.label }}</span>
+                            </div>
+                        </mat-radio-button>
+                        }
+                    </mat-radio-group>
+
+                    <div class="step-actions">
+                        <button mat-button matStepperPrevious>
+                            <mat-icon>arrow_back</mat-icon>
+                            Back
+                        </button>
+                        <button mat-raised-button color="primary" (click)="placeOrder()" [disabled]="isSubmitting">
+                            @if (isSubmitting) {
+                            <mat-icon>hourglass_empty</mat-icon>
+                            Processing...
+                            } @else {
+                            <mat-icon>check_circle</mat-icon>
+                            Place Order
+                            }
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+        </mat-stepper>
+    </mat-card>
+</div>

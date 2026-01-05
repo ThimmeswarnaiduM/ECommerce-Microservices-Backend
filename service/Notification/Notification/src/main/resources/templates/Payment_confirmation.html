@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Payment Confirmation</title>
+    <style>
+        /* Basic reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: #f4f4f7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        a {
+            text-decoration: none;
+        }
+        /* Container */
+        .email-wrapper {
+            width: 100%;
+            padding: 20px 0;
+            background-color: #f4f4f7;
+        }
+        .email-content {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+        /* Header */
+        .email-header {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            padding: 24px 30px;
+            color: #ffffff;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .email-header span {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Body */
+        .email-body {
+            padding: 24px 30px 10px;
+            color: #111827;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+        .highlight-box {
+            margin: 18px 0;
+            padding: 14px 16px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+        .highlight-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .highlight-row span.label {
+            color: #6b7280;
+        }
+        .highlight-row span.value {
+            font-weight: 600;
+            color: #111827;
+        }
+        .amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #16a34a;
+        }
+
+        /* Button */
+        .button-wrapper {
+            text-align: center;
+            margin: 24px 0 6px;
+        }
+        .primary-button {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 9999px;
+            background-color: #4f46e5;
+            color: #ffffff !important;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .email-footer {
+            padding: 0 30px 22px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .divider {
+            border-top: 1px solid #e5e7eb;
+            margin: 10px 0 16px;
+        }
+        .muted {
+            color: #9ca3af;
+        }
+        .brand {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        @media (max-width: 600px) {
+            .email-content {
+                border-radius: 0;
+            }
+            .email-header,
+            .email-body,
+            .email-footer {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-wrapper">
+    <div class="email-content">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>Payment Successful 🎉</h1>
+            <span>Thank you for shopping with E-Commerce Project</span>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <p class="greeting">
+                Hi <strong th:text="${customerName}">Customer Name</strong>,
+            </p>
+            <p>
+                We’ve received your payment for the order
+                <strong th:text="${orderReference}">#ORDER-REF</strong>.
+            </p>
+
+            <div class="highlight-box">
+                <div class="highlight-row">
+                    <span class="label">Order Reference</span>
+                    <span class="value" th:text="${orderReference}">#ORDER-REF</span>
+                </div>
+                <div class="highlight-row">
+                    <span class="label">Amount Paid</span>
+                    <span class="value amount" th:text="${amount}">₹0.00</span>
+                </div>
+                <div class="highlight-row">
+                    <span class="label">Status</span>
+                    <span class="value">Paid</span>
+                </div>
+            </div>
+
+            <p>
+                Your order is now being processed. We’ll send you another update once your items
+                are packed and ready to ship.
+            </p>
+
+            <div class="button-wrapper">
+                <a class="primary-button"
+                   href="#"
+                   target="_blank">
+                    View Order
+                </a>
+            </div>
+
+            <p style="font-size: 12px; margin-top: 16px; color:#6b7280;">
+                If the button above doesn’t work, you can access your order from your
+                <strong>My Orders</strong> section in your account.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="divider"></div>
+            <p>
+                This email was sent regarding your recent payment on
+                <span class="brand">E-Commerce Project</span>.
+            </p>
+            <p class="muted">
+                Please do not reply to this automated message. If you need help,
+                contact our support team from the Help Center.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

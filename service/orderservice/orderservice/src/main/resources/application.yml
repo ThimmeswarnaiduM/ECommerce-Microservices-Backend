@@ -1,26 +1,56 @@
-spring:
-  config:
-    import: optional:configserver:http://config-server:8888
-  application:
-    name: order-service
-  profiles:
-    active: docker
-
 server:
   port: 8070
 
-kafka:
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  application:
+    name: order-service
+
+  kafka:
+    bootstrap-servers: localhost:9092   # ✅ REQUIRED
     producer:
-      bootstrap-servers: localhost:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.type.mapping:
           orderConfirmation: com.e_commerce_project.orderservice.Records.OrderConfirmation
 
+application:
+  customer:
+    url: http://localhost:8090/api/v1/customers
+  product:
+    url: http://localhost:8091/api/v1/products
+  payment:
+    url: http://localhost:8060/api/v1/payments
 
-# Basic Eureka config as fallback
 eureka:
   client:
+
     serviceUrl:
       defaultZone: http://eureka-server:8761/eureka/
+
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+management:
+  tracing:
+    sampling:
+      probability: 1.0   # local
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  service:
+    name: ${spring.application.name}
+
+

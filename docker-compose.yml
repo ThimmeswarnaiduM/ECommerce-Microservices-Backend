@@ -1,272 +1,45 @@
 
 
 services:
-  config_server:
-    image: thimmeswarnaidu/config-server:s10
-    container_name: config_server
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.8.0
+    container_name: zookeeper
     ports:
-      - "8888:8888"
-    restart: unless-stopped
-    networks:
-      - microservice_network
+      - "2181:2181"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
-      interval: 60s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-
-  eureka_server:
-    image: thimmeswarnaidu/eureka-server:E1
-    container_name: eureka-server
-    ports:
-      - "8761:8761"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SERVER_PORT=8761
-      - EUREKA_INSTANCE_HOSTNAME=eureka-server
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-    depends_on:
-      config_server:
-        condition: service_healthy
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     networks:
       - microservice_network
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-
-  postgres:
-    container_name: ms_pg_sql
-    image: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: product
-      PGDATA: /var/lib/postgresql/data
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    restart: unless-stopped
-    networks:
-      - microservice_network
-  mysql:
-    container_name: ms_mysql
-    image: mysql:8.0
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_DATABASE: order_service
-      # ✅ remove MYSQL_USER=root and MYSQL_PASSWORD
-      # If you want a non-root app user, add like:
-      # MYSQL_USER: appuser
-      # MYSQL_PASSWORD: apppass
-    volumes:
-      - mysql_data:/var/lib/mysql
-    restart: unless-stopped
-    networks:
-      - microservice_network
-
-  phpmyadmin:
-    container_name: phpmyadmin
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - "8083:80"
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: mysql
-    depends_on:
-      - mysql
-    restart: unless-stopped
-    networks:
-      - microservice_network
-
-
-
-
-
-  pgadmin:
-    container_name: pg_admin
-    image: dpage/pgadmin4
-    ports:
-      - "8081:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_DEFAULT_EMAIL:-pgadmin@pg.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    depends_on:
-      - postgres
-    restart: unless-stopped
-    networks:
-      - microservice_network
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-
-  mongo:
-    container_name: mongo_db
-    image: mongo
-    ports:
-      - "27018:27017"
-    command: --bind_ip_all
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-    volumes:
-      - mongo:/data/db
-    restart: unless-stopped
-    networks:
-      - microservice_network
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh mongodb://admin:admin@localhost:27017/admin --quiet || exit 1
+      test: [ "CMD", "nc", "-z", "localhost", "2181" ]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 20s
-
-  order-service:
-    container_name: order-service
-    image: thimmeswarnaidu/order-service:s22
-    ports:
-      - "8070:8070"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://ms_mysql:3306/order_service
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=mysql
-      - APPLICATION_CUSTOMER_URL=http://customer-service:8090/api/v1/customers
-      - APPLICATION_PRODUCT_URL=http://product-service:8091/api/v1/products
-      - APPLICATION_PAYMENT_URL=http://localhost:8081/api/v1/payments
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - EUREKA_INSTANCE_PREFERIPADDRESS=false
-      - EUREKA_INSTANCE_HOSTNAME=order-service
-      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=true
-      - EUREKA_CLIENT_FETCH_REGISTRY=true
-    depends_on:
-
-      - eureka_server
-      - config_server
-
-
-
-    networks:
-      - microservice_network
-    restart: unless-stopped
-
-  customer:
-    image: thimmeswarnaidu/customer-service:s15
-    container_name: customer-service
-    ports:
-      - "8090:8090"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_APPLICATION_NAME=customer-service
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - EUREKA_INSTANCE_PREFERIPADDRESS=false
-      - EUREKA_INSTANCE_HOSTNAME=customer-service
-      - SPRING_DATA_MONGODB_URI=mongodb://admin:admin@mongo_db:27017/customer?authSource=admin&authMechanism=SCRAM-SHA-1
-      - SPRING_CLOUD_CONFIG_URI=http://config_server:8888
-      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=true
-      - EUREKA_CLIENT_FETCH_REGISTRY=true
-    depends_on:
-      - mongo
-      - eureka_server
-      - config_server
-
-
-
-    networks:
-      - microservice_network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
-      interval: 60s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-  productservice:
-    image: thimmeswarnaidu/product-service:s29
-    container_name: product-service
-    ports:
-      - "8091:8091"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_APPLICATION_NAME=product-service
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - EUREKA_INSTANCE_PREFERIPADDRESS=false
-      - EUREKA_INSTANCE_HOSTNAME=product-service
-      - SPRING_DATA_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/product
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_CLOUD_CONFIG_URI=http://config_server:8888
-      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=true
-      - EUREKA_CLIENT_FETCH_REGISTRY=true
-    depends_on:
-      - postgres
-      - eureka_server
-      - config_server
-    networks:
-      - microservice_network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8091/actuator/health" ]
-      interval: 60s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
-  mongo-express:
-    image: mongo-express
-    container_name: ms_mongo_express
-    ports:
-      - "8082:8081"
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongo_db          # Correct name of the MongoDB container
-      ME_CONFIG_MONGODB_PORT: 27017                # Internal MongoDB port (unchanged)
-      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin
-    depends_on:
-      - mongo
-    restart: unless-stopped
-    networks:
-      - microservice_network
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: ms_zookeeper
-    environment:
-      ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
-    networks:
-      - microservice_network
-    restart: unless-stopped
   kafka:
-    image: confluentinc/cp-kafka:latest
-    container_name: ms_kafka
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: ms_zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka
     ports:
       - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+      # ---- REQUIRED DUAL LISTENERS ----
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      # ---------------------------------
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      zookeeper:
+        condition: service_healthy
     networks:
       - microservice_network
-    restart: unless-stopped
+
+
 
 
 
@@ -284,8 +57,3 @@ networks:
   microservice_network:
     driver: bridge
 
-volumes:
-  postgres:
-  mongo:
-  pgadmin_data:
-  mysql_data:

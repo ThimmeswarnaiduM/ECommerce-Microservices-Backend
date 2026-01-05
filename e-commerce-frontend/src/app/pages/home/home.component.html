@@ -1,0 +1,45 @@
+<div class="home-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to E-Commerce Store</h1>
+            <p class="hero-subtitle">Discover amazing products at unbeatable prices</p>
+            <div class="hero-actions">
+                <button mat-raised-button color="primary" routerLink="/products" class="cta-button">
+                    <mat-icon>shopping_bag</mat-icon>
+                    Shop Now
+                </button>
+                <button mat-stroked-button routerLink="/register" class="secondary-button">
+                    <mat-icon>person_add</mat-icon>
+                    Create Account
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2 class="section-title">Why Shop With Us</h2>
+        <div class="features-grid">
+            @for (feature of features; track feature.title) {
+            <mat-card class="feature-card">
+                <mat-card-content>
+                    <mat-icon class="feature-icon">{{ feature.icon }}</mat-icon>
+                    <h3>{{ feature.title }}</h3>
+                    <p>{{ feature.description }}</p>
+                </mat-card-content>
+            </mat-card>
+            }
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <h2>Start Shopping Today</h2>
+        <p>Browse our extensive collection of products</p>
+        <button mat-raised-button color="accent" routerLink="/products" class="large-cta">
+            Explore Products
+            <mat-icon>arrow_forward</mat-icon>
+        </button>
+    </section>
+</div>

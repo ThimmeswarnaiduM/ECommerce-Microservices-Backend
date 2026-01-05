@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Spring property -->
+    <springProperty scope="context"
+                    name="APP_NAME"
+                    source="spring.application.name"/>
+
+    <property name="LOKI_URL"
+              value="http://localhost:3100/loki/api/v1/push"/>
+
+    <!-- Loki Appender -->
+    <appender name="LOKI"
+              class="com.github.loki4j.logback.Loki4jAppender">
+        <http>
+            <url>${LOKI_URL}</url>
+        </http>
+        <format>
+            <pattern>
+                {
+                "timestamp": "%date{ISO8601}",
+                "level": "%level",
+                "service": "${APP_NAME}",
+                "traceId": "%X{trace_id}",
+                "spanId": "%X{span_id}",
+                "thread": "%thread",
+                "logger": "%logger",
+                "message": "%message"
+                }
+            </pattern>
+        </format>
+    </appender>
+
+    <!-- Console (optional but useful) -->
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level [%thread] %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOKI"/>
+    </root>
+
+</configuration>

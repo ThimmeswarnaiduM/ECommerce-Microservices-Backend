@@ -1,0 +1,228 @@
+.cart-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.cart-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 24px;
+}
+
+.cart-items-card {
+    .cart-item {
+        display: grid;
+        grid-template-columns: 80px 1fr auto auto auto auto;
+        gap: 16px;
+        align-items: center;
+        padding: 16px;
+        border-bottom: 1px solid #e0e0e0;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            mat-icon {
+                font-size: 40px;
+                width: 40px;
+                height: 40px;
+                color: white;
+            }
+        }
+
+        .item-details {
+            h3 {
+                margin: 0 0 4px 0;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            .item-category {
+                margin: 0 0 8px 0;
+                font-size: 12px;
+                color: #666;
+            }
+
+            .item-description {
+                margin: 0;
+                font-size: 14px;
+                color: #999;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+        }
+
+        .item-price,
+        .item-total {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            .price-label,
+            .total-label {
+                font-size: 12px;
+                color: #666;
+            }
+
+            .price-value,
+            .total-value {
+                font-size: 18px;
+                font-weight: 600;
+                color: #667eea;
+            }
+        }
+
+        .item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .quantity-value {
+                min-width: 30px;
+                text-align: center;
+                font-weight: 600;
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+.order-summary-card {
+    height: fit-content;
+    position: sticky;
+    top: 84px;
+
+    mat-card-content {
+        padding: 24px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        font-size: 16px;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        &.total {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            padding-top: 16px;
+        }
+    }
+
+    mat-card-actions {
+        padding: 16px 24px;
+
+        .checkout-button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+
+            mat-icon {
+                margin-right: 8px;
+            }
+        }
+    }
+}
+
+.empty-cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    text-align: center;
+
+    mat-icon {
+        font-size: 120px;
+        width: 120px;
+        height: 120px;
+        color: #ccc;
+        margin-bottom: 24px;
+    }
+
+    h2 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    p {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 24px;
+    }
+
+    button {
+        mat-icon {
+            margin-right: 8px;
+        }
+    }
+}
+
+@media (max-width: 992px) {
+    .cart-content {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary-card {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-items-card .cart-item {
+        grid-template-columns: 60px 1fr;
+        gap: 12px;
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            grid-row: 1 / 3;
+
+            mat-icon {
+                font-size: 30px;
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        .item-details {
+            grid-column: 2;
+        }
+
+        .item-price,
+        .item-quantity,
+        .item-total {
+            grid-column: 1 / -1;
+            justify-content: space-between;
+            flex-direction: row;
+        }
+
+        .item-actions {
+            grid-column: 1 / -1;
+            text-align: right;
+        }
+    }
+}

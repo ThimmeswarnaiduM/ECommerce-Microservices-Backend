@@ -1,10 +1,56 @@
+server:
+  port: 8090
+
 spring:
+  application:
+    name: customer-service
+
   data:
     mongodb:
-      username: admin
-      password: admin
-      host: localhost
-      port: 27018
-      database: customer # The database your app will primarily use
-      authentication-database-name: admin # The database where the 'root' user is defined
-      uri: mongodb://admin:admin@localhost:27018/customer?authSource=admin&authMechanism=SCRAM-SHA-1
+      uri: mongodb://admin:admin@localhost:27017/customer?authSource=admin&authMechanism=SCRAM-SHA-1
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    healthcheck:
+      enabled: true
+
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    appname: customer-service
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  health:
+    mongo:
+      enabled: true
+    diskspace:
+      enabled: true
+
+logging:
+  level:
+    org.springframework.cloud: DEBUG
+    com.netflix.eureka: DEBUG
+    com.netflix.discovery: DEBUG
+    root: INFO
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html

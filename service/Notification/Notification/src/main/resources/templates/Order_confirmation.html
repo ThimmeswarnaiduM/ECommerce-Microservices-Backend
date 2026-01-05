@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Order Confirmation</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background-color: #f4f4f7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        a {
+            text-decoration: none;
+        }
+        .email-wrapper {
+            width: 100%;
+            padding: 20px 0;
+        }
+        .email-content {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+
+        .email-header {
+            background: linear-gradient(135deg, #0ea5e9, #6366f1);
+            padding: 24px 32px;
+            color: #ffffff;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .email-header p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .email-body {
+            padding: 24px 32px 12px;
+            color: #111827;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+        .order-summary {
+            margin: 18px 0;
+            padding: 14px 16px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+        .order-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .order-summary-row span.label {
+            color: #6b7280;
+        }
+        .order-summary-row span.value {
+            font-weight: 600;
+            color: #111827;
+        }
+        .order-summary-row span.value.total {
+            font-size: 17px;
+            color: #16a34a;
+        }
+
+        .products-table-wrapper {
+            margin-top: 18px;
+        }
+        .products-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        table.products-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        table.products-table thead {
+            background-color: #f3f4f6;
+        }
+        table.products-table th,
+        table.products-table td {
+            padding: 10px 10px;
+            text-align: left;
+        }
+        table.products-table th {
+            font-weight: 600;
+            color: #4b5563;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        table.products-table tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        table.products-table tbody tr td {
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .text-right {
+            text-align: right;
+        }
+
+        .button-wrapper {
+            text-align: center;
+            margin: 22px 0 8px;
+        }
+        .primary-button {
+            display: inline-block;
+            padding: 10px 24px;
+            border-radius: 9999px;
+            background-color: #0ea5e9;
+            color: #ffffff !important;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .email-footer {
+            padding: 0 32px 22px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .divider {
+            border-top: 1px solid #e5e7eb;
+            margin: 10px 0 16px;
+        }
+        .muted {
+            color: #9ca3af;
+        }
+        .brand {
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        @media (max-width: 700px) {
+            .email-content {
+                border-radius: 0;
+            }
+            .email-header,
+            .email-body,
+            .email-footer {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+            table.products-table thead {
+                display: none;
+            }
+            table.products-table,
+            table.products-table tbody,
+            table.products-table tr,
+            table.products-table td {
+                display: block;
+                width: 100%;
+            }
+            table.products-table tr {
+                margin-bottom: 10px;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                padding: 8px 10px;
+            }
+            table.products-table td {
+                border-bottom: none;
+                text-align: left !important;
+            }
+            table.products-table td::before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 600;
+                margin-bottom: 2px;
+                color: #6b7280;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="email-wrapper">
+    <div class="email-content">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>Your order is confirmed </h1>
+            <p>Thank you for placing your order with E-Commerce Project.</p>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <p class="greeting">
+                Hi <strong th:text="${customerName}">Customer Name</strong>,
+            </p>
+            <p>
+                We’re happy to let you know that your order
+                <strong th:text="${orderReference}">#ORDER-REF</strong>
+                has been successfully placed.
+            </p>
+
+            <!-- Order summary -->
+            <div class="order-summary">
+                <div class="order-summary-row">
+                    <span class="label">Order Reference</span>
+                    <span class="value" th:text="${orderReference}">#ORDER-REF</span>
+                </div>
+                <div class="order-summary-row">
+                    <span class="label">Order Total</span>
+                    <span class="value total" th:text="${amount}">₹0.00</span>
+                </div>
+                <div class="order-summary-row">
+                    <span class="label">Payment Status</span>
+                    <span class="value">Confirmed</span>
+                </div>
+            </div>
+
+            <!-- Products list (optional) -->
+            <div class="products-table-wrapper" th:if="${products} != null">
+                <div class="products-title">Items in your order</div>
+                <table class="products-table">
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th class="text-right">Qty</th>
+                        <th class="text-right">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="product : ${products}">
+                        <td data-label="Product"
+                            th:text="${product.productName}">Product Name</td>
+                        <td class="text-right" data-label="Qty"
+                            th:text="${product.quantity}">1</td>
+                        <td class="text-right" data-label="Price"
+                            th:text="${product.price}">₹0.00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="margin-top: 18px;">
+                You’ll receive another email when your order is shipped, along with tracking details.
+            </p>
+
+            <div class="button-wrapper">
+                <a class="primary-button"
+                   href="#"
+                   target="_blank">
+                    Track Your Order
+                </a>
+            </div>
+
+            <p style="font-size: 12px; margin-top: 16px; color:#6b7280;">
+                You can also view this order anytime from the <strong>My Orders</strong> section
+                in your account.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="divider"></div>
+            <p>
+                Thanks again for shopping with <span class="brand">E-Commerce Project</span>.
+            </p>
+            <p class="muted">
+                If you have any questions, please visit our Help Center or contact support.
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

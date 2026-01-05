@@ -7,18 +7,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="configServer" />
+        <module name="Gatewayserver" />
         <module name="discoverServer" />
+        <module name="configServer" />
+        <module name="Notification" />
       </profile>
-      <profile name="Annotation profile for customer" enabled="true">
+      <profile name="Annotation profile for PaymentService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.40/lombok-1.18.40.jar" />
         </processorPath>
-        <module name="customer" />
+        <module name="PaymentService" />
       </profile>
       <profile name="Annotation profile for orderservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -29,19 +30,23 @@
         </processorPath>
         <module name="orderservice" />
       </profile>
-      <profile name="Annotation profile for productservice" enabled="true">
+      <profile name="Annotation profile for customer" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
         </processorPath>
+        <module name="customer" />
         <module name="productservice" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Gatewayserver" options="-parameters" />
+      <module name="Notification" options="-parameters" />
+      <module name="PaymentService" options="-parameters" />
       <module name="configServer" options="-parameters" />
       <module name="customer" options="-parameters" />
       <module name="discoverServer" options="-parameters" />

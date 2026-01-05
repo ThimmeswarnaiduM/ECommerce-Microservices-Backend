@@ -3,6 +3,7 @@ package com.e_commerce_project.orderservice.Service.Imp;
 import com.e_commerce_project.orderservice.Entity.Order;
 import com.e_commerce_project.orderservice.Kafka.OrderProducer;
 import com.e_commerce_project.orderservice.Mapping.OrderMapper;
+import com.e_commerce_project.orderservice.OpenFeign.PaymentResponse;
 import com.e_commerce_project.orderservice.OpenFeign.customerResponse;
 import com.e_commerce_project.orderservice.Records.*;
 import com.e_commerce_project.orderservice.Repository.OrderRepository;
@@ -24,6 +25,7 @@ public class OrderServiceImp implements OrderService {
     @Qualifier("productClient")
 
     private final ProductClient productClient;
+    private final PaymentResponse paymentResponse;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final OrderLineservice orderLineservice;
@@ -45,6 +47,13 @@ public class OrderServiceImp implements OrderService {
            );
        }
 
+        paymentResponse.createPayment(
+                new PaymentRequest(
+                orderRequest.totalAmount(),
+                orderRequest.id(),
+                orderRequest.paymentStatus(),
+                customer
+        ));
        orderProducer.sendOrderConfirmation(
                new OrderConfirmation(
                        orderRequest.referenceNumber(),
@@ -52,6 +61,7 @@ public class OrderServiceImp implements OrderService {
                        orderRequest.paymentStatus(),
                       customer,
                        products
+
 
                )
        );

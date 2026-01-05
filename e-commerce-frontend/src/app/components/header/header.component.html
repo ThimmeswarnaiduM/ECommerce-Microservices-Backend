@@ -1,0 +1,44 @@
+<mat-toolbar color="primary" class="header">
+  <div class="toolbar-content">
+    <div class="logo-section">
+      <mat-icon class="logo-icon">shopping_cart</mat-icon>
+      <span class="brand-name" routerLink="/">E-Commerce Store</span>
+    </div>
+
+    <nav class="nav-links">
+      <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <mat-icon>home</mat-icon>
+        Home
+      </a>
+      <a mat-button routerLink="/products" routerLinkActive="active">
+        <mat-icon>inventory_2</mat-icon>
+        Products
+      </a>
+      <a mat-button routerLink="/orders" routerLinkActive="active">
+        <mat-icon>receipt_long</mat-icon>
+        Orders
+      </a>
+    </nav>
+
+    <div class="actions">
+      <button mat-icon-button routerLink="/cart" [matBadge]="(cartItemsCount$ | async) || 0" matBadgeColor="warn" [matBadgeHidden]="(cartItemsCount$ | async) === 0">
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+      
+      <button mat-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        Account
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </button>
+        <button mat-menu-item routerLink="/register">
+          <mat-icon>person_add</mat-icon>
+          <span>Register</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

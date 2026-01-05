@@ -1,0 +1,46 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: gateway-server
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+
+info:
+  app:
+    name: API Gateway Server
+    description: Spring Cloud Gateway for Microservices
+    version: 1.0.0
+
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0   # local
+  endpoints:
+    web:
+      exposure:
+        include: info,health,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  service:
+    name: ${spring.application.name}
+
+
+
+server:
+  port: 8072

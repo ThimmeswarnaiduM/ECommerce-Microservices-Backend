@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/v1/orders")
 //url=http://localhost:8080/orders/createOrder
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+
+
     @PostMapping("/createOrder")
     public ResponseEntity<Long> CreateOrder(@RequestBody OrderRequest orderRequest){
         return ResponseEntity.ok(orderService.createOrder(orderRequest));
